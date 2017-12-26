@@ -1,0 +1,21 @@
+
+<dom-module>
+    <script>
+    var AsyncBehavior = {
+      actions: {
+        double: function() {
+          console.log(123);
+          return function(dispatch) {
+            $.get("/api/notes",
+            function(success){
+              dispatch({ type: 'DOUBLE' });
+            }),
+            function(error){
+              console.log(123);
+            }
+          };
+        }
+      },
+    };
+  </script>
+</dom-module>

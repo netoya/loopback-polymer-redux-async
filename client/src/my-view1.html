@@ -1,0 +1,90 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Redux -->
+<link rel="import" href="./redux/redux.html">
+<!-- Redux Behaviors -->
+<link rel="import" href="./redux/behaviors/async.html">
+
+
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>
+          Counter value: 
+          <span>[[counter]]</span>
+      </h1>
+      <button on-click="incrementClick">Increment</button>
+      <button on-click="increment200Click">Increment (0.2s)</button>
+      <button on-click="increment500Click">Increment (0.5s)</button>
+      <button on-click="increment1000Click">Increment (1.0s)</button>
+      <button on-click="double1000Click">Double (1.0s)</button>
+    </div>
+  </template>
+
+  <script>
+
+    Polymer({
+      is: 'my-view1',
+      behaviors: [ ReduxBehavior, AsyncBehavior ],
+      actions: {
+        increment: function(ms) {
+          if (ms) {
+            return function(dispatch) {
+              setTimeout(function() {
+                return dispatch('increment');
+              }, ms);
+            };
+          }
+          return {
+            type: 'INCREMENT',
+          };
+        }
+      },
+      properties: {
+        counter: {
+          type: Number,
+          statePath: 'counter',
+        }
+      },
+      incrementClick: function() {
+        return this.dispatch('increment');
+      },
+      increment200Click: function() {
+        return this.dispatch('increment', 200);
+      },
+      increment500Click: function() {
+        return this.dispatch('increment', 500);
+      },
+      increment1000Click: function() {
+        return this.dispatch(function(dispatch) {
+          setTimeout(function() {
+            dispatch('increment');
+          }, 1000);
+        });
+      },
+      double1000Click: function() {
+        this.dispatch('double');
+      }
+    });
+  </script>
+</dom-module>

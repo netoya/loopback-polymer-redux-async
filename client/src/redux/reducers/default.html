@@ -1,0 +1,17 @@
+<dom-module>
+
+<script>
+var reducer = function(state, action) {
+    state = state || { counter: 0 };
+    var counter = state.counter;
+    if (action.type === 'INCREMENT') {
+      ++counter;
+    } else if (action.type === 'DOUBLE') {
+      counter += counter;
+    }
+    return {
+      counter: counter,
+    };
+  };
+</script>
+</dom-module>
