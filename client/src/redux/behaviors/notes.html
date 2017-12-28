@@ -1,0 +1,24 @@
+
+<dom-module>
+    <script>
+    var NotesBehavior = {
+      actions: {
+        notesFetch: function() {
+          return function(dispatch) {
+            dispatch({ type: 'NOTES_FETCHING' });
+            $.get("/api/notes",
+            function(success){
+                dispatch({ type: 'NOTES_FETCHED', payload: success.data });
+            }),
+            function(error){
+                dispatch({ type: 'NOTES_FETCHED', payload: [] });
+            }
+          };
+        }
+      },
+      notesFetch: function(){
+        this.dispatch('notesFetch');
+      }
+    };
+  </script>
+</dom-module>

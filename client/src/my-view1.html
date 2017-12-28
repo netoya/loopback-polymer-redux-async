@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- Redux -->
 <link rel="import" href="./redux/redux.html">
 <!-- Redux Behaviors -->
-<link rel="import" href="./redux/behaviors/async.html">
+<link rel="import" href="./redux/behaviors/notes.html">
 
 
 <dom-module id="my-view1">
@@ -33,11 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           Counter value: 
           <span>[[counter]]</span>
       </h1>
-      <button on-click="incrementClick">Increment</button>
-      <button on-click="increment200Click">Increment (0.2s)</button>
-      <button on-click="increment500Click">Increment (0.5s)</button>
-      <button on-click="increment1000Click">Increment (1.0s)</button>
-      <button on-click="double1000Click">Double (1.0s)</button>
+      <button on-click="notesFetch">Increment</button>
     </div>
   </template>
 
@@ -45,45 +41,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
       is: 'my-view1',
-      behaviors: [ ReduxBehavior, AsyncBehavior ],
-      actions: {
-        increment: function(ms) {
-          if (ms) {
-            return function(dispatch) {
-              setTimeout(function() {
-                return dispatch('increment');
-              }, ms);
-            };
-          }
-          return {
-            type: 'INCREMENT',
-          };
-        }
-      },
+      behaviors: [ ReduxBehavior, NotesBehavior ],
+      actions: { },
       properties: {
         counter: {
-          type: Number,
-          statePath: 'counter',
+          type: String,
+          statePath: 'notesReducer.itemsFetching',
         }
-      },
-      incrementClick: function() {
-        return this.dispatch('increment');
-      },
-      increment200Click: function() {
-        return this.dispatch('increment', 200);
-      },
-      increment500Click: function() {
-        return this.dispatch('increment', 500);
-      },
-      increment1000Click: function() {
-        return this.dispatch(function(dispatch) {
-          setTimeout(function() {
-            dispatch('increment');
-          }, 1000);
-        });
-      },
-      double1000Click: function() {
-        this.dispatch('double');
       }
     });
   </script>
