@@ -8,6 +8,7 @@ const NOTES_INITIAL_STATE = {
   itemsFetching: false,   // to display a 'loading..' when fetching
   item: null,             // stores the loaded item to be used on the form
   itemFetching: false,    // to display a 'loading..' when opening the form
+  itemSaving: false,      // lock submit buttom when saving
   simulated: false,       // if is simulating remote calls with a delay
 };
 
@@ -17,27 +18,35 @@ var notesReducer = function(state, action) {
     switch (action.type) {
         // change the scene (form / list)
         case 'NOTES_NAVIGATE':
-            return { ...state, scene: action.payload };
+            return Object.assign(state,{scene: action.payload });
 
         // the list is being loaded, show the loading.. and reset the items
         case 'NOTES_FETCHING':
-            return { ...state, itemsFetching: true, items: [] };
+            return Object.assign(state,{itemsFetching: true, items: [] });
 
         // hide the loading and set the loaded data into items
         case 'NOTES_FETCHED':
-            return { ...state, itemsFetching: false, items: action.payload};
+            return Object.assign(state,{itemsFetching: false, items: action.payload});
 
         // one item is being loaded, show a loading.. inside the form and reset the current item
         case 'NOTES_FETCHING_ONE':
-            return { ...state, itemFetching: true, item: null};
+            return Object.assign(state,{itemFetching: true, item: null});
 
         // hide the loading.. inside the form and set the loaded data into our 'item'
         case 'NOTES_FETCHED_ONE':
-            return { ...state, itemFetching: false, item: action.payload};
+            return Object.assign(state,{itemFetching: false, item: action.payload});
+
+        // one item is being saved, lock form.. 
+        case 'NOTES_SAVING_ONE':
+            return Object.assign(state,{itemSaving: true});
+
+        // unlock form..
+        case 'NOTES_SAVED_ONE':
+            return Object.assign(state,{itemSaving: false});
 
         // status change on the simulation checkbox
         case 'NOTES_SET_SIMULATION':
-            return { ...state, simulated: action.payload};
+            return Object.assign(state,{simulated: action.payload});
 
         // do nothing
         default:

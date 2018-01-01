@@ -1,0 +1,20 @@
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+<link rel="import" href="../components/app-notes/app-notes-redux.html">
+
+<dom-module>
+    <script>
+        /**
+         * @polymerBehavior ReduxBehavior
+         */
+         var ReduxBehavior = createReduxBehavior();
+         
+         function createReduxBehavior(){
+            var reducer = Redux.combineReducers({notesReducer})
+            var store = Redux.createStore(
+                reducer,
+                Redux.applyMiddleware(ReduxThunk.default)
+            );
+            return PolymerRedux(store);
+         }
+    </script>
+</dom-module>

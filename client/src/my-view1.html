@@ -11,17 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
 
-<link rel="import" href="./components/horizontal-draggable/horizontal-draggable.html">
-
-<!-- Redux -->
-<link rel="import" href="./redux/redux.html">
 <!-- Components-->
 <link rel="import" href="./components/app-notes/app-notes.html">
 
@@ -51,47 +44,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       selected="[[vista]]"
       attr-for-selected="name">
       <div class="card" name="form">
-          <button on-click="notesList">lista</button>
-          <paper-input always-float-label label="titulo"></paper-input>
-          <paper-input always-float-label label="texto"></paper-input>
-
+          <button on-click="notesList">Ver lista</button>
+          <notes-form></notes-form>
       </div>
       <div class="card" name="list">
-        <div>
-          <div style="float:left">
-            <h1>
-                Counter value: 
-                <span hidden$="{{cargando}}">[[notas.length]]</span>
-                <paper-spinner active$="{{cargando}}"></paper-spinner>
-            </h1>
-          </div>
-          <div style="float:right">
-            <button on-click="notesFetch">Refresh</button>
-          </div>
-          <div style="clear:both"></div>
-        </div>
-        <horizontal-draggable>
-          
-            <template is="dom-repeat" items="{{notas}}" as="nota">
-                <paper-card>
-                  <div class="card-content"
-                      style="background: var(--paper-blue-600);
-                              color: var(--paper-grey-200)">
-                    {{nota.title}}
-                  </div>
-                  <div class="card-content">
-                    {{nota.content}}
-                  </div>
-                </div>
-              </paper-card>
-            </template>
-            
-          
-        </horizontal-draggable>
+        <notes-list id="list"></notes-list>
         <paper-fab icon="add" on-click="notesForm"></paper-fab>
-
       </div>
     </iron-pages>
+    [[item.title]]
+    [[item.content]]
   </template>
 
   <script>
@@ -100,7 +62,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'my-view1',
       behaviors: [ ReduxBehavior, NotesBehavior ],
       actions: { },
+      listeners:{
+        'iron-select': '_pageChanged'
+      },
       properties: {
+        item: {
+          type: Object,
+          statePath: 'notesReducer.item',
+        },
         notas: {
           type: Array,
           statePath: 'notesReducer.items',
@@ -112,6 +81,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         vista: {
           type:String,
           statePath: 'notesReducer.scene'
+        }
+      },
+      _pageChanged: function(e, page){
+        var name = page.item.getAttribute('name');
+        if(name=='list'){
+          // you can run some function
+          // this.$.list.refresh();
         }
       }
     });

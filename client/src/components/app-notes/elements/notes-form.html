@@ -1,0 +1,84 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/iron-form/iron-form.html">
+
+<link rel="import" href="../behaviors/notes.html">
+
+<dom-module id="notes-form">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      
+      paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-pink-a200) !important;
+          color: white !important;
+        };
+      }
+
+      paper-button[disabled] {
+        background-color: var(--paper-indigo-200);
+      }
+    </style>
+
+    <iron-form id="notesForm">
+
+      <form is="formNotes"> 
+        <paper-input name="title" value="{{item.title}}" always-float-label label="titulo"></paper-input>
+        <paper-input name="content" value="{{item.content}}" always-float-label label="texto"></paper-input>
+        <paper-button class="indigo" disabled="[[saving]]" on-tap="submit">
+            <span hidden$="{{saving}}">Guardar</span>
+            <span hidden$="{{!saving}}">Guardando</span>
+        </paper-button>
+      </form>
+      
+    </iron-form>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'notes-form',
+      behaviors: [ ReduxBehavior, NotesBehavior ],
+      actions: {
+        notesSetItem: function(item){
+          return {type: 'NOTES_FETCHED_ONE', payload: item};
+        }
+      },
+      listeners:{
+        'iron-form-submit': '_notes_submit'
+      },
+      properties: {
+        item: {
+          type: Object,
+          statePath: 'notesReducer.item',
+        },
+        saving: {
+          type: Boolean,
+          statePath: 'notesReducer.itemSaving'
+        }
+      },
+      submit: function(){
+        this.$.notesForm.submit();
+      },
+      _notes_submit: function(e, data){
+        this.dispatch('notesSave', data);
+      }
+    });
+  </script>
+</dom-module>

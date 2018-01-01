@@ -1,6 +1,9 @@
 
 <dom-module>
     <script>
+    /**
+     * @polymerBehavior NotesBehavior
+     */
     var NotesBehavior = {
       actions: {
         notesFetch: function() {
@@ -16,6 +19,16 @@
             }
           };
         },
+        notesSave: function(item) {
+          return function(dispatch) {
+            dispatch({type: 'NOTES_SAVING_ONE'});
+            $.post("/api/notes",
+                   item,
+                   function(success){
+                    dispatch({type: 'NOTES_SAVED_ONE'})
+                  })
+          }
+        },
         notesView: function(view){
           return {type: 'NOTES_NAVIGATE', payload: view};
         }
@@ -28,6 +41,9 @@
       },
       notesList: function(){
         this.dispatch('notesView', 'list')
+      },
+      notesSave: function(item){
+        this.dispatch('notesView', item);
       }
     };
   </script>
