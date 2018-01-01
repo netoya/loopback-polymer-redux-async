@@ -8,16 +8,26 @@
             dispatch({ type: 'NOTES_FETCHING' });
             $.get("/api/notes",
             function(success){
-                dispatch({ type: 'NOTES_FETCHED', payload: success.data });
+              console.log(success);
+                dispatch({ type: 'NOTES_FETCHED', payload: success });
             }),
             function(error){
                 dispatch({ type: 'NOTES_FETCHED', payload: [] });
             }
           };
+        },
+        notesView: function(view){
+          return {type: 'NOTES_NAVIGATE', payload: view};
         }
       },
       notesFetch: function(){
         this.dispatch('notesFetch');
+      },
+      notesForm: function(){
+        this.dispatch('notesView', 'form')
+      },
+      notesList: function(){
+        this.dispatch('notesView', 'list')
       }
     };
   </script>

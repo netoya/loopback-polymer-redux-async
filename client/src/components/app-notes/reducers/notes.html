@@ -13,6 +13,7 @@ const NOTES_INITIAL_STATE = {
 
 var notesReducer = function(state, action) {
     state = state || NOTES_INITIAL_STATE;
+    
     switch (action.type) {
         // change the scene (form / list)
         case 'NOTES_NAVIGATE':

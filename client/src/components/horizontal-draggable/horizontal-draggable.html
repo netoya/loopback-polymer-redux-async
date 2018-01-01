@@ -1,0 +1,79 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="horizontal-draggable">
+  <template>
+    <style include="shared-styles">
+      :host {
+        position:relative;
+        display: block;
+        overflow-x: hidden;
+      }
+
+      :host>#draggable{
+        position:relative;
+        white-space: nowrap;
+        padding: 1px;
+        display: inline-block;
+      }
+      :host>#draggable>*{
+        display:inline-block;
+      }
+    </style>
+
+    <div id="draggable">
+        <slot></slot>
+        <content></content>
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+      is: 'horizontal-draggable',
+      actions: {},
+      properties: {},
+      attached: function(){
+        var self = this;
+        var containerEl = this.shadowRoot.querySelector( '#draggable' );
+        var dragManager = new Hammer.Manager( this );
+
+        var currentPosition = containerEl.offsetleft || 0;
+        
+        dragManager.add( new Hammer.Pan({ threshold: 0, pointers: 0 }) );
+        dragManager.on( 'pan', function( e ) {
+          $(containerEl).stop();
+
+          // Unnecessary visualization stuff below
+          containerEl.style.left = (currentPosition + e.deltaX) + 'px';
+          if( e.isFinal ) {
+            endPosition = self.offsetWidth-containerEl.offsetWidth;
+            if(containerEl.offsetLeft > 0 ||self.offsetWidth > containerEl.offsetWidth){
+              // TODO: Trigger left
+              $(containerEl).animate({left: 0});
+              currentPosition = 0;              
+            } else if(containerEl.offsetLeft < 0 && containerEl.offsetLeft < endPosition){
+              // TODO: Trigger right
+              $(containerEl).animate({left: endPosition});
+              currentPosition = endPosition;
+            } else {
+              currentPosition = containerEl.offsetLeft;
+              console.log(containerEl.offsetLeft)
+            }
+
+          }
+        });
+      }
+    });
+  </script>
+</dom-module>
